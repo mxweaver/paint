@@ -16,6 +16,8 @@ const config: Configuration = {
       ".tsx",
       ".js",
       ".jsx",
+      ".css",
+      ".scss",
     ],
   },
   module: {
@@ -27,6 +29,14 @@ const config: Configuration = {
       {
         test: /\.html?$/,
         loader: 'html-loader',
+      },
+      {
+        test: /\.s?css$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'sass-loader',
+        ],
       },
     ],
   },
