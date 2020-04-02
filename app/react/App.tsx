@@ -1,6 +1,7 @@
 import React, {
   useRef, useCallback, useState, useEffect,
 } from 'react';
+import c from './App.scss';
 
 const PRIMARY_MOUSE_BUTTON = 1;
 
@@ -68,10 +69,10 @@ export default function App() {
   ]);
 
   return (
-    <div style={{ position: 'relative', cursor: 'none', display: 'inline-block' }}>
+    <div className={c.container}>
       <canvas
         ref={cursorCanvasRef}
-        style={{ position: 'fixed', pointerEvents: 'none' }}
+        className={c.cursorCanvas}
         width={100}
         height={100}
       />

@@ -1,0 +1,10 @@
+.container {
+  position: relative;
+  cursor: none;
+  display: inline-block;
+}
+
+.cursorCanvas {
+  position: fixed;
+  pointer-events: none;
+}

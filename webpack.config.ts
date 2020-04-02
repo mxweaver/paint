@@ -34,7 +34,15 @@ const config: Configuration = {
         test: /\.s?css$/,
         use: [
           'style-loader',
-          'css-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                mode: 'local',
+                localIdentName: '[path][name]__[local]--[hash:base64:5]',
+              },
+            },
+          },
           'sass-loader',
         ],
       },
