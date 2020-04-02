@@ -1,4 +1,6 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react';
+import React, {
+  useRef, useCallback, useState, useEffect,
+} from 'react';
 
 const PRIMARY_MOUSE_BUTTON = 1;
 
@@ -7,7 +9,7 @@ export default function App() {
 
   const cursorCanvasRef = useRef<HTMLCanvasElement>();
   const viewCanvasRef = useRef<HTMLCanvasElement>();
-  
+
   const [mouseDown, setMouseDown] = useState(false);
   const [mousePosition, setMousePosition] = useState(null);
 
@@ -30,7 +32,7 @@ export default function App() {
   useEffect(() => {
     const cursorCanvas = cursorCanvasRef.current;
     const cursorCanvasContext = cursorCanvas.getContext('2d');
-    
+
     cursorCanvasContext.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
 
     if (mousePosition === null) {
@@ -45,7 +47,7 @@ export default function App() {
         x - (brushSize / 2),
         y - (brushSize / 2),
         brushSize,
-        brushSize
+        brushSize,
       );
     } else {
       cursorCanvasContext.fillStyle = 'red';
@@ -54,7 +56,7 @@ export default function App() {
         x - (brushSize / 2),
         y - (brushSize / 2),
         brushSize,
-        brushSize
+        brushSize,
       );
     }
   }, [
@@ -62,14 +64,14 @@ export default function App() {
     viewCanvasRef,
     brushSize,
     mouseDown,
-    mousePosition
+    mousePosition,
   ]);
 
   return (
     <div style={{ position: 'relative', cursor: 'none', display: 'inline-block' }}>
       <canvas
         ref={cursorCanvasRef}
-        style={{ position: 'fixed', pointerEvents: 'none'}}
+        style={{ position: 'fixed', pointerEvents: 'none' }}
         width={100}
         height={100}
       />

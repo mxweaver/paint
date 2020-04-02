@@ -8,16 +8,16 @@ const config: Configuration = {
   devtool: 'inline-source-map',
   output: {
     filename: 'bundle.js',
-    path: resolve(__dirname, 'dist')
+    path: resolve(__dirname, 'dist'),
   },
   resolve: {
     extensions: [
-      ".ts",
-      ".tsx",
-      ".js",
-      ".jsx",
-      ".css",
-      ".scss",
+      '.ts',
+      '.tsx',
+      '.js',
+      '.jsx',
+      '.css',
+      '.scss',
     ],
   },
   module: {
