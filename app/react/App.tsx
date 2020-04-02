@@ -19,11 +19,11 @@ export default function App() {
     setMousePosition([event.clientX, event.clientY]);
   }, []);
 
-  const handleMouseUp = useCallback((event: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMouseUp = useCallback(() => {
     setMouseDown(false);
   }, []);
 
-  const handleMouseLeave = useCallback((event: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMouseLeave = useCallback(() => {
     setMousePosition(null);
   }, []);
 
