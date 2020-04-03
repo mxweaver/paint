@@ -18,6 +18,8 @@ const config: Configuration = {
       '.jsx',
       '.css',
       '.scss',
+      '.module.scss',
+      '.module.css',
     ],
   },
   module: {
@@ -31,7 +33,7 @@ const config: Configuration = {
         loader: 'html-loader',
       },
       {
-        test: /\.s?css$/,
+        test: /\.module\.s?css$/,
         use: [
           'style-loader',
           {
@@ -41,6 +43,20 @@ const config: Configuration = {
                 mode: 'local',
                 localIdentName: '[path][name]__[local]--[hash:base64:5]',
               },
+            },
+          },
+          'sass-loader',
+        ],
+      },
+      {
+        test: /\.s?css$/,
+        exclude: /\.module\.s?css$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: false,
             },
           },
           'sass-loader',
