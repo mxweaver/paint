@@ -61,8 +61,8 @@ export default function App() {
     const rect = event.currentTarget.getBoundingClientRect();
 
     setMousePosition([
-      event.clientX - rect.left,
-      event.clientY - rect.top,
+      Math.floor(event.clientX - rect.left),
+      Math.floor(event.clientY - rect.top),
     ]);
   }, []);
 
@@ -198,7 +198,7 @@ export default function App() {
           </ButtonToolbar>
         </Col>
       </Row>
-      <Row>
+      <Row className="mt-2">
         <Col>
           <div className={c.container}>
             <div className={c.inner}>
@@ -248,6 +248,21 @@ export default function App() {
                     </Col>
                   </Form.Group>
                 </Form>
+              </ListGroup.Item>
+            </ListGroup>
+          </Card>
+          <Card className="mt-2">
+            <Card.Header>Cursor</Card.Header>
+            <ListGroup>
+              <ListGroup.Item>
+                X:
+                {' '}
+                {mousePosition ? mousePosition[0] : ''}
+              </ListGroup.Item>
+              <ListGroup.Item>
+                Y:
+                {' '}
+                {mousePosition ? mousePosition[1] : ''}
               </ListGroup.Item>
             </ListGroup>
           </Card>
