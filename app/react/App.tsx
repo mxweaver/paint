@@ -22,6 +22,7 @@ enum Key {
   ArrowUp = 'ArrowUp',
   ArrowRight = 'ArrowRight',
   ArrowDown = 'ArrowDown',
+  s = 's',
 }
 
 enum Tool {
@@ -40,6 +41,13 @@ export default function App() {
   const [initialMousePosition, setInitialMousePosition] = useState(null);
   const [tool, setTool] = useState(Tool.Brush);
   const [shift, setShift] = useState(false);
+
+  const handleSave = useCallback(() => {
+    window.location.href = viewCanvasRef
+      .current
+      .toDataURL('image/png')
+      .replace('image/png', 'image/octet-stream');
+  }, [viewCanvasRef]);
 
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     setShift(event.shiftKey);
@@ -66,6 +74,12 @@ export default function App() {
       case Key.ArrowDown:
         event.preventDefault();
         delta = [0, 1];
+        break;
+      case Key.s:
+        if (event.metaKey) {
+          event.preventDefault();
+          handleSave();
+        }
         break;
       default:
         // do nothing
@@ -224,13 +238,6 @@ export default function App() {
     const viewCanvas = viewCanvasRef.current;
     const context = viewCanvas.getContext('2d');
     context.clearRect(0, 0, viewCanvas.width, viewCanvas.height);
-  }, [viewCanvasRef]);
-
-  const handleSave = useCallback(() => {
-    window.location.href = viewCanvasRef
-      .current
-      .toDataURL('image/png')
-      .replace('image/png', 'image/octet-stream');
   }, [viewCanvasRef]);
 
   return (
