@@ -1,7 +1,12 @@
 .container {
   position: relative;
   cursor: none;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inner {
   border: 2px solid black;
 }
 

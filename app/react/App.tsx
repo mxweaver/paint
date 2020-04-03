@@ -188,21 +188,23 @@ export default function App() {
       <Row>
         <Col>
           <div className={c.container}>
-            <canvas
-              ref={cursorCanvasRef}
-              className={c.cursorCanvas}
-              width={canvasSize}
-              height={canvasSize}
-            />
-            <canvas
-              ref={viewCanvasRef}
-              width={canvasSize}
-              height={canvasSize}
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseLeave}
-            />
+            <div className={c.inner}>
+              <canvas
+                ref={cursorCanvasRef}
+                className={c.cursorCanvas}
+                width={canvasSize}
+                height={canvasSize}
+              />
+              <canvas
+                ref={viewCanvasRef}
+                width={canvasSize}
+                height={canvasSize}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseLeave}
+              />
+            </div>
           </div>
         </Col>
         <Col xs={3}>
