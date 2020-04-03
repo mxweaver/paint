@@ -99,16 +99,17 @@ export default function App() {
 
   // draw cursor
   useEffect(() => {
+    const cursorCanvas = cursorCanvasRef.current;
+    const cursorCanvasContext = cursorCanvas.getContext('2d');
+
+    cursorCanvasContext.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+
     const cursorPosition = getCursorPosition();
     if (!cursorPosition) {
       return;
     }
 
     const [x, y] = cursorPosition;
-    const cursorCanvas = cursorCanvasRef.current;
-    const cursorCanvasContext = cursorCanvas.getContext('2d');
-
-    cursorCanvasContext.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
 
     cursorCanvasContext.fillStyle = 'red';
 
