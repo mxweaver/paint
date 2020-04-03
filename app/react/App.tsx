@@ -11,7 +11,7 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaintBrush } from '@fortawesome/free-solid-svg-icons';
+import { faPaintBrush, faTrash } from '@fortawesome/free-solid-svg-icons';
 import c from './App.module.scss';
 
 const PRIMARY_MOUSE_BUTTON = 1;
@@ -158,6 +158,12 @@ export default function App() {
     setBrushSize(event.currentTarget.valueAsNumber);
   }, [setBrushSize]);
 
+  const handleReset = useCallback(() => {
+    const viewCanvas = viewCanvasRef.current;
+    const context = viewCanvas.getContext('2d');
+    context.clearRect(0, 0, viewCanvas.width, viewCanvas.height);
+  }, [viewCanvasRef]);
+
   return (
     <Container>
       <Row>
@@ -169,6 +175,11 @@ export default function App() {
                 onClick={() => setTool(Tool.Brush)}
               >
                 <FontAwesomeIcon icon={faPaintBrush} />
+              </Button>
+              <Button
+                onClick={handleReset}
+              >
+                <FontAwesomeIcon icon={faTrash} />
               </Button>
             </ButtonGroup>
           </ButtonToolbar>
