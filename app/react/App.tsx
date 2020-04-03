@@ -1,9 +1,15 @@
 import React, {
   useRef, useCallback, useState, useEffect,
 } from 'react';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Form from 'react-bootstrap/Form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaintBrush } from '@fortawesome/free-solid-svg-icons';
 import c from './App.module.scss';
@@ -15,8 +21,8 @@ enum Tool {
 }
 
 export default function App() {
-  const brushSize = 5;
-  const canvasSize = 100;
+  const [brushSize, setBrushSize] = useState(5);
+  const canvasSize = 600;
 
   const cursorCanvasRef = useRef<HTMLCanvasElement>();
   const viewCanvasRef = useRef<HTMLCanvasElement>();
@@ -148,35 +154,79 @@ export default function App() {
     initialMousePosition,
   ]);
 
+  const handleBrushSizeChange = useCallback((event: React.FormEvent<HTMLInputElement>) => {
+    setBrushSize(event.currentTarget.valueAsNumber);
+  }, [setBrushSize]);
+
   return (
-    <>
-      <ButtonToolbar>
-        <ButtonGroup className="mr-2">
-          <Button
-            active={tool === Tool.Brush}
-            onClick={() => setTool(Tool.Brush)}
-          >
-            <FontAwesomeIcon icon={faPaintBrush} />
-          </Button>
-        </ButtonGroup>
-      </ButtonToolbar>
-      <div className={c.container}>
-        <canvas
-          ref={cursorCanvasRef}
-          className={c.cursorCanvas}
-          width={canvasSize}
-          height={canvasSize}
-        />
-        <canvas
-          ref={viewCanvasRef}
-          width={canvasSize}
-          height={canvasSize}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
-        />
-      </div>
-    </>
+    <Container>
+      <Row>
+        <Col>
+          <ButtonToolbar>
+            <ButtonGroup className="mr-2">
+              <Button
+                active={tool === Tool.Brush}
+                onClick={() => setTool(Tool.Brush)}
+              >
+                <FontAwesomeIcon icon={faPaintBrush} />
+              </Button>
+            </ButtonGroup>
+          </ButtonToolbar>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <div className={c.container}>
+            <canvas
+              ref={cursorCanvasRef}
+              className={c.cursorCanvas}
+              width={canvasSize}
+              height={canvasSize}
+            />
+            <canvas
+              ref={viewCanvasRef}
+              width={canvasSize}
+              height={canvasSize}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseLeave}
+            />
+          </div>
+        </Col>
+        <Col xs={3}>
+          <Card>
+            <Card.Header>Brush</Card.Header>
+            <ListGroup>
+              <ListGroup.Item>
+                <Form>
+                  <Form.Group controlId="formBasicRange" as={Row}>
+                    <Form.Label column xs={3} className="p-1">Size</Form.Label>
+                    <Col xs={4} className="p-1">
+                      <Form.Control
+                        type="number"
+                        min={1}
+                        max={100}
+                        value={brushSize}
+                        onChange={handleBrushSizeChange}
+                      />
+                    </Col>
+                    <Col xs={5} className="p-1">
+                      <Form.Control
+                        type="range"
+                        min={1}
+                        max={100}
+                        value={brushSize}
+                        onChange={handleBrushSizeChange}
+                      />
+                    </Col>
+                  </Form.Group>
+                </Form>
+              </ListGroup.Item>
+            </ListGroup>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 }
