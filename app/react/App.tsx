@@ -16,6 +16,14 @@ import c from './App.module.scss';
 
 const PRIMARY_MOUSE_BUTTON = 1;
 
+enum Key {
+  Space = ' ',
+  ArrowLeft = 'ArrowLeft',
+  ArrowUp = 'ArrowUp',
+  ArrowRight = 'ArrowRight',
+  ArrowDown = 'ArrowDown',
+}
+
 enum Tool {
   Brush = 'brush',
 }
@@ -27,28 +35,81 @@ export default function App() {
   const cursorCanvasRef = useRef<HTMLCanvasElement>();
   const viewCanvasRef = useRef<HTMLCanvasElement>();
 
-  const [mouseDown, setMouseDown] = useState(false);
+  const [drawing, setDrawing] = useState(false);
   const [mousePosition, setMousePosition] = useState(null);
   const [initialMousePosition, setInitialMousePosition] = useState(null);
   const [tool, setTool] = useState(Tool.Brush);
   const [shift, setShift] = useState(false);
 
-  const handleKeyChange = useCallback((event: KeyboardEvent) => {
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
     setShift(event.shiftKey);
-  }, [setShift]);
+
+    let delta = null;
+
+    switch (event.key) {
+      case Key.Space:
+        event.preventDefault();
+        setDrawing(true);
+        break;
+      case Key.ArrowLeft:
+        event.preventDefault();
+        delta = [-1, 0];
+        break;
+      case Key.ArrowUp:
+        event.preventDefault();
+        delta = [0, -1];
+        break;
+      case Key.ArrowRight:
+        event.preventDefault();
+        delta = [1, 0];
+        break;
+      case Key.ArrowDown:
+        event.preventDefault();
+        delta = [0, 1];
+        break;
+      default:
+        // do nothing
+        break;
+    }
+
+    if (delta !== null && mousePosition) {
+      setMousePosition([mousePosition[0] + delta[0], mousePosition[1] + delta[1]]);
+    }
+  }, [
+    setShift,
+    mousePosition,
+    setDrawing,
+  ]);
 
   useEffect(() => {
-    document.addEventListener('keydown', handleKeyChange);
-    return () => document.removeEventListener('keydown', handleKeyChange);
-  }, [handleKeyChange]);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
+
+  const handleKeyUp = useCallback((event: KeyboardEvent) => {
+    setShift(event.shiftKey);
+
+    switch (event.key) {
+      case Key.Space:
+        event.preventDefault();
+        setDrawing(false);
+        break;
+      default:
+        // do nothing
+        break;
+    }
+  }, [
+    setShift,
+    setDrawing,
+  ]);
 
   useEffect(() => {
-    document.addEventListener('keyup', handleKeyChange);
-    return () => document.removeEventListener('keyup', handleKeyChange);
-  }, [handleKeyChange]);
+    document.addEventListener('keyup', handleKeyUp);
+    return () => document.removeEventListener('keyup', handleKeyUp);
+  }, [handleKeyUp]);
 
   const handleMouseDown = useCallback((event: React.MouseEvent<HTMLCanvasElement>) => {
-    setMouseDown(event.buttons === PRIMARY_MOUSE_BUTTON);
+    setDrawing(event.buttons === PRIMARY_MOUSE_BUTTON);
 
     const rect = event.currentTarget.getBoundingClientRect();
     setInitialMousePosition([
@@ -67,7 +128,7 @@ export default function App() {
   }, []);
 
   const handleMouseUp = useCallback(() => {
-    setMouseDown(false);
+    setDrawing(false);
     setInitialMousePosition(null);
   }, []);
 
@@ -135,7 +196,7 @@ export default function App() {
 
     const [x, y] = cursorPosition;
 
-    if (mouseDown) {
+    if (drawing) {
       const context = viewCanvasRef.current.getContext('2d');
 
       if (tool === Tool.Brush) {
@@ -150,7 +211,7 @@ export default function App() {
   }, [
     viewCanvasRef,
     brushSize,
-    mouseDown,
+    drawing,
     mousePosition,
     initialMousePosition,
   ]);
