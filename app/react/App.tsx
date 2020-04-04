@@ -291,6 +291,7 @@ export default function App() {
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseLeave}
+                onMouseDown={handleMouseDown}
               />
             </div>
           </div>
