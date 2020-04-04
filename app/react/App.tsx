@@ -12,6 +12,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaintBrush, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
+import CanvasOptions from './CanvasOptions';
 import c from './App.module.scss';
 
 const PRIMARY_MOUSE_BUTTON = 1;
@@ -30,9 +31,12 @@ enum Tool {
 }
 
 export default function App() {
+  const [canvasOptions, setCanvasOptions] = useState({
+    width: 600,
+    height: 600,
+  });
   const [brushSize, setBrushSize] = useState(5);
   const [brushColor, setBrushColor] = useState('#000000');
-  const canvasSize = 600;
 
   const cursorCanvasRef = useRef<HTMLCanvasElement>();
   const viewCanvasRef = useRef<HTMLCanvasElement>();
@@ -283,14 +287,13 @@ export default function App() {
               <canvas
                 ref={cursorCanvasRef}
                 className={c.cursorCanvas}
-                width={canvasSize}
-                height={canvasSize}
+                width={canvasOptions.width}
+                height={canvasOptions.height}
               />
               <canvas
                 ref={viewCanvasRef}
-                width={canvasSize}
-                height={canvasSize}
-                onMouseDown={handleMouseDown}
+                width={canvasOptions.width}
+                height={canvasOptions.height}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseLeave}
@@ -365,6 +368,7 @@ export default function App() {
               </ListGroup.Item>
             </ListGroup>
           </Card>
+          <CanvasOptions value={canvasOptions} onChange={setCanvasOptions} />
         </Col>
       </Row>
     </Container>
