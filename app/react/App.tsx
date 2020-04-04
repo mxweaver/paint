@@ -11,9 +11,11 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaintBrush, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
-import BrushOptions from './BrushOptions';
-import CanvasOptions from './CanvasOptions';
+import BrushOptionsPanel from './BrushOptionsPanel';
+import CanvasOptionsPanel from './CanvasOptionsPanel';
 import CursorOptions from './CursorOptions';
+import CursorCanvas from './CursorCanvas';
+import { getLockedCursorPosition } from '../utils';
 import c from './App.module.scss';
 
 const PRIMARY_MOUSE_BUTTON = 1;
@@ -41,7 +43,6 @@ export default function App() {
     color: '#000000',
   });
 
-  const cursorCanvasRef = useRef<HTMLCanvasElement>();
   const viewCanvasRef = useRef<HTMLCanvasElement>();
 
   const [drawing, setDrawing] = useState(false);
@@ -49,6 +50,10 @@ export default function App() {
   const [initialCursorPosition, setInitialCursorPosition] = useState<number[] | null>(null);
   const [tool, setTool] = useState(Tool.Brush);
   const [shift, setShift] = useState(false);
+
+  const modifiedCursorPosition = shift
+    ? getLockedCursorPosition(cursorPosition, initialCursorPosition)
+    : cursorPosition;
 
   const handleSave = () => {
     window.location.href = viewCanvasRef
@@ -160,66 +165,10 @@ export default function App() {
     setInitialCursorPosition(null);
   };
 
-  function getCursorPosition(): number[] | null {
-    if (cursorPosition === null) {
-      return null;
-    }
-
-    if (initialCursorPosition !== null && shift) {
-      const [x, y] = cursorPosition;
-      const [iX, iY] = initialCursorPosition;
-
-      const dX = Math.abs(iX - x);
-      const dY = Math.abs(iY - y);
-
-      if (dX < dY) {
-        return [iX, y];
-      }
-      return [x, iY];
-    }
-
-    return cursorPosition;
-  }
-
-  // draw cursor
-  useEffect(() => {
-    const cursorCanvas = cursorCanvasRef.current;
-    const cursorCanvasContext = cursorCanvas.getContext('2d');
-
-    cursorCanvasContext.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
-
-    const cursorPosition = getCursorPosition();
-    if (!cursorPosition) {
-      return;
-    }
-
-    const [x, y] = cursorPosition;
-
-    cursorCanvasContext.fillStyle = 'red';
-
-    cursorCanvasContext.fillRect(
-      x - (brushOptions.size / 2),
-      y - (brushOptions.size / 2),
-      brushOptions.size,
-      brushOptions.size,
-    );
-  }, [
-    cursorPosition,
-    initialCursorPosition,
-    cursorCanvasRef,
-    brushOptions.size,
-  ]);
-
   // alter canvas
   useEffect(() => {
-    const cursorPosition = getCursorPosition();
-    if (!cursorPosition) {
-      return;
-    }
-
-    const [x, y] = cursorPosition;
-
-    if (drawing) {
+    if (modifiedCursorPosition && drawing) {
+      const [x, y] = modifiedCursorPosition;
       const context = viewCanvasRef.current.getContext('2d');
 
       if (tool === Tool.Brush) {
@@ -235,8 +184,7 @@ export default function App() {
     viewCanvasRef,
     brushOptions.size,
     drawing,
-    cursorPosition,
-    initialCursorPosition,
+    modifiedCursorPosition,
   ]);
 
   // sync brush color
@@ -280,11 +228,10 @@ export default function App() {
         <Col>
           <div className={c.container}>
             <div className={c.inner}>
-              <canvas
-                ref={cursorCanvasRef}
-                className={c.cursorCanvas}
-                width={canvasOptions.width}
-                height={canvasOptions.height}
+              <CursorCanvas
+                canvasOptions={canvasOptions}
+                cursorPosition={cursorPosition}
+                brushOptions={brushOptions}
               />
               <canvas
                 ref={viewCanvasRef}
@@ -299,9 +246,9 @@ export default function App() {
           </div>
         </Col>
         <Col xs={3}>
-          <BrushOptions value={brushOptions} onChange={setBrushOptions} />
+          <BrushOptionsPanel value={brushOptions} onChange={setBrushOptions} />
           <CursorOptions position={cursorPosition} />
-          <CanvasOptions value={canvasOptions} onChange={setCanvasOptions} />
+          <CanvasOptionsPanel value={canvasOptions} onChange={setCanvasOptions} />
         </Col>
       </Row>
     </Container>

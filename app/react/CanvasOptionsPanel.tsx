@@ -4,18 +4,14 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
-
-interface Value {
-  width: number;
-  height: number;
-}
+import { CanvasOptions } from '../utils';
 
 interface Props {
-  onChange(value: Value): void;
-  value: Value;
+  onChange(value: CanvasOptions): void;
+  value: CanvasOptions;
 }
 
-export default function CanvasOptions(props: Props) {
+export default function CanvasOptionsPanel(props: Props) {
   const { onChange, value } = props;
   const { width, height } = value;
 

@@ -4,18 +4,14 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
-
-interface Value {
-  size: number;
-  color: string;
-}
+import { BrushOptions } from '../utils';
 
 interface Props {
-  value: Value;
-  onChange(value: Value): void;
+  value: BrushOptions;
+  onChange(value: BrushOptions): void;
 }
 
-export default function BrushOptions(props: Props) {
+export default function BrushOptionsPanel(props: Props) {
   const { onChange, value } = props;
   const { size, color } = value;
 
