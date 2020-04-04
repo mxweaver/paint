@@ -31,7 +31,7 @@ enum Tool {
 
 export default function App() {
   const [brushSize, setBrushSize] = useState(5);
-  const [brushColor, setBrushColor] = useState('black');
+  const [brushColor, setBrushColor] = useState('#000000');
   const canvasSize = 600;
 
   const cursorCanvasRef = useRef<HTMLCanvasElement>();
@@ -331,7 +331,14 @@ export default function App() {
                 <Form>
                   <Form.Group as={Row}>
                     <Form.Label column xs={3} className="p-1">Color</Form.Label>
-                    <Col xs={9} className="p-1">
+                    <Col xs={5} className="p-1">
+                      <Form.Control
+                        type="text"
+                        value={brushColor}
+                        onChange={handleBrushColorChange}
+                      />
+                    </Col>
+                    <Col xs={4} className="p-1">
                       <Form.Control
                         type="color"
                         value={brushColor}
