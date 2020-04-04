@@ -7,12 +7,11 @@ import Col from 'react-bootstrap/Col';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import ListGroup from 'react-bootstrap/ListGroup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaintBrush, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
 import BrushOptions from './BrushOptions';
 import CanvasOptions from './CanvasOptions';
+import CursorOptions from './CursorOptions';
 import c from './App.module.scss';
 
 const PRIMARY_MOUSE_BUTTON = 1;
@@ -44,8 +43,8 @@ export default function App() {
   const viewCanvasRef = useRef<HTMLCanvasElement>();
 
   const [drawing, setDrawing] = useState(false);
-  const [mousePosition, setMousePosition] = useState(null);
-  const [initialMousePosition, setInitialMousePosition] = useState(null);
+  const [cursorPosition, setCursorPosition] = useState(null);
+  const [initialCursorPosition, setInitialCursorPosition] = useState(null);
   const [tool, setTool] = useState(Tool.Brush);
   const [shift, setShift] = useState(false);
 
@@ -93,12 +92,12 @@ export default function App() {
         break;
     }
 
-    if (delta !== null && mousePosition) {
-      setMousePosition([mousePosition[0] + delta[0], mousePosition[1] + delta[1]]);
+    if (delta !== null && cursorPosition) {
+      setCursorPosition([cursorPosition[0] + delta[0], cursorPosition[1] + delta[1]]);
     }
   }, [
     setShift,
-    mousePosition,
+    cursorPosition,
     setDrawing,
   ]);
 
@@ -133,7 +132,7 @@ export default function App() {
     setDrawing(event.buttons === PRIMARY_MOUSE_BUTTON);
 
     const rect = event.currentTarget.getBoundingClientRect();
-    setInitialMousePosition([
+    setInitialCursorPosition([
       event.clientX - rect.left,
       event.clientY - rect.top,
     ]);
@@ -142,7 +141,7 @@ export default function App() {
   const handleMouseMove = useCallback((event: React.MouseEvent<HTMLCanvasElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
 
-    setMousePosition([
+    setCursorPosition([
       Math.floor(event.clientX - rect.left),
       Math.floor(event.clientY - rect.top),
     ]);
@@ -150,22 +149,22 @@ export default function App() {
 
   const handleMouseUp = useCallback(() => {
     setDrawing(false);
-    setInitialMousePosition(null);
+    setInitialCursorPosition(null);
   }, []);
 
   const handleMouseLeave = useCallback(() => {
-    setMousePosition(null);
-    setInitialMousePosition(null);
+    setCursorPosition(null);
+    setInitialCursorPosition(null);
   }, []);
 
   function getCursorPosition(): number[] | null {
-    if (mousePosition === null) {
+    if (cursorPosition === null) {
       return null;
     }
 
-    if (initialMousePosition !== null && shift) {
-      const [x, y] = mousePosition;
-      const [iX, iY] = initialMousePosition;
+    if (initialCursorPosition !== null && shift) {
+      const [x, y] = cursorPosition;
+      const [iX, iY] = initialCursorPosition;
 
       const dX = Math.abs(iX - x);
       const dY = Math.abs(iY - y);
@@ -176,7 +175,7 @@ export default function App() {
       return [x, iY];
     }
 
-    return mousePosition;
+    return cursorPosition;
   }
 
   // draw cursor
@@ -202,8 +201,8 @@ export default function App() {
       brushOptions.size,
     );
   }, [
-    mousePosition,
-    initialMousePosition,
+    cursorPosition,
+    initialCursorPosition,
     cursorCanvasRef,
     brushOptions.size,
   ]);
@@ -233,8 +232,8 @@ export default function App() {
     viewCanvasRef,
     brushOptions.size,
     drawing,
-    mousePosition,
-    initialMousePosition,
+    cursorPosition,
+    initialCursorPosition,
   ]);
 
   // sync brush color
@@ -298,21 +297,7 @@ export default function App() {
         </Col>
         <Col xs={3}>
           <BrushOptions value={brushOptions} onChange={setBrushOptions} />
-          <Card className="mt-2">
-            <Card.Header>Cursor</Card.Header>
-            <ListGroup>
-              <ListGroup.Item>
-                X:
-                {' '}
-                {mousePosition ? mousePosition[0] : ''}
-              </ListGroup.Item>
-              <ListGroup.Item>
-                Y:
-                {' '}
-                {mousePosition ? mousePosition[1] : ''}
-              </ListGroup.Item>
-            </ListGroup>
-          </Card>
+          <CursorOptions position={cursorPosition} />
           <CanvasOptions value={canvasOptions} onChange={setCanvasOptions} />
         </Col>
       </Row>
