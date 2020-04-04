@@ -9,9 +9,9 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
-import Form from 'react-bootstrap/Form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaintBrush, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
+import BrushOptions from './BrushOptions';
 import CanvasOptions from './CanvasOptions';
 import c from './App.module.scss';
 
@@ -35,8 +35,10 @@ export default function App() {
     width: 600,
     height: 600,
   });
-  const [brushSize, setBrushSize] = useState(5);
-  const [brushColor, setBrushColor] = useState('#000000');
+  const [brushOptions, setBrushOptions] = useState({
+    size: 5,
+    color: '#000000',
+  });
 
   const cursorCanvasRef = useRef<HTMLCanvasElement>();
   const viewCanvasRef = useRef<HTMLCanvasElement>();
@@ -194,16 +196,16 @@ export default function App() {
     cursorCanvasContext.fillStyle = 'red';
 
     cursorCanvasContext.fillRect(
-      x - (brushSize / 2),
-      y - (brushSize / 2),
-      brushSize,
-      brushSize,
+      x - (brushOptions.size / 2),
+      y - (brushOptions.size / 2),
+      brushOptions.size,
+      brushOptions.size,
     );
   }, [
     mousePosition,
     initialMousePosition,
     cursorCanvasRef,
-    brushSize,
+    brushOptions.size,
   ]);
 
   // alter canvas
@@ -220,16 +222,16 @@ export default function App() {
 
       if (tool === Tool.Brush) {
         context.fillRect(
-          x - (brushSize / 2),
-          y - (brushSize / 2),
-          brushSize,
-          brushSize,
+          x - (brushOptions.size / 2),
+          y - (brushOptions.size / 2),
+          brushOptions.size,
+          brushOptions.size,
         );
       }
     }
   }, [
     viewCanvasRef,
-    brushSize,
+    brushOptions.size,
     drawing,
     mousePosition,
     initialMousePosition,
@@ -237,22 +239,14 @@ export default function App() {
 
   // sync brush color
   useEffect(() => {
-    viewCanvasRef.current.getContext('2d').fillStyle = brushColor;
-  }, [brushColor]);
-
-  const handleBrushSizeChange = useCallback((event: React.FormEvent<HTMLInputElement>) => {
-    setBrushSize(event.currentTarget.valueAsNumber);
-  }, [setBrushSize]);
+    viewCanvasRef.current.getContext('2d').fillStyle = brushOptions.color;
+  }, [brushOptions.color]);
 
   const handleReset = useCallback(() => {
     const viewCanvas = viewCanvasRef.current;
     const context = viewCanvas.getContext('2d');
     context.clearRect(0, 0, viewCanvas.width, viewCanvas.height);
   }, [viewCanvasRef]);
-
-  const handleBrushColorChange = useCallback((event: React.FormEvent<HTMLInputElement>) => {
-    setBrushColor(event.currentTarget.value);
-  }, [setBrushColor]);
 
   return (
     <Container>
@@ -302,57 +296,7 @@ export default function App() {
           </div>
         </Col>
         <Col xs={3}>
-          <Card>
-            <Card.Header>Brush</Card.Header>
-            <ListGroup>
-              <ListGroup.Item>
-                <Form>
-                  <Form.Group as={Row}>
-                    <Form.Label column xs={3} className="p-1">Size</Form.Label>
-                    <Col xs={4} className="p-1">
-                      <Form.Control
-                        type="number"
-                        min={1}
-                        max={100}
-                        value={brushSize}
-                        onChange={handleBrushSizeChange}
-                      />
-                    </Col>
-                    <Col xs={5} className="p-1">
-                      <Form.Control
-                        type="range"
-                        min={1}
-                        max={100}
-                        value={brushSize}
-                        onChange={handleBrushSizeChange}
-                      />
-                    </Col>
-                  </Form.Group>
-                </Form>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Form>
-                  <Form.Group as={Row}>
-                    <Form.Label column xs={3} className="p-1">Color</Form.Label>
-                    <Col xs={5} className="p-1">
-                      <Form.Control
-                        type="text"
-                        value={brushColor}
-                        onChange={handleBrushColorChange}
-                      />
-                    </Col>
-                    <Col xs={4} className="p-1">
-                      <Form.Control
-                        type="color"
-                        value={brushColor}
-                        onChange={handleBrushColorChange}
-                      />
-                    </Col>
-                  </Form.Group>
-                </Form>
-              </ListGroup.Item>
-            </ListGroup>
-          </Card>
+          <BrushOptions value={brushOptions} onChange={setBrushOptions} />
           <Card className="mt-2">
             <Card.Header>Cursor</Card.Header>
             <ListGroup>
