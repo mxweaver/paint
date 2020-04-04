@@ -31,6 +31,7 @@ enum Tool {
 
 export default function App() {
   const [brushSize, setBrushSize] = useState(5);
+  const [brushColor, setBrushColor] = useState('black');
   const canvasSize = 600;
 
   const cursorCanvasRef = useRef<HTMLCanvasElement>();
@@ -230,6 +231,11 @@ export default function App() {
     initialMousePosition,
   ]);
 
+  // sync brush color
+  useEffect(() => {
+    viewCanvasRef.current.getContext('2d').fillStyle = brushColor;
+  }, [brushColor]);
+
   const handleBrushSizeChange = useCallback((event: React.FormEvent<HTMLInputElement>) => {
     setBrushSize(event.currentTarget.valueAsNumber);
   }, [setBrushSize]);
@@ -239,6 +245,10 @@ export default function App() {
     const context = viewCanvas.getContext('2d');
     context.clearRect(0, 0, viewCanvas.width, viewCanvas.height);
   }, [viewCanvasRef]);
+
+  const handleBrushColorChange = useCallback((event: React.FormEvent<HTMLInputElement>) => {
+    setBrushColor(event.currentTarget.value);
+  }, [setBrushColor]);
 
   return (
     <Container>
@@ -294,7 +304,7 @@ export default function App() {
             <ListGroup>
               <ListGroup.Item>
                 <Form>
-                  <Form.Group controlId="formBasicRange" as={Row}>
+                  <Form.Group as={Row}>
                     <Form.Label column xs={3} className="p-1">Size</Form.Label>
                     <Col xs={4} className="p-1">
                       <Form.Control
@@ -312,6 +322,20 @@ export default function App() {
                         max={100}
                         value={brushSize}
                         onChange={handleBrushSizeChange}
+                      />
+                    </Col>
+                  </Form.Group>
+                </Form>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Form>
+                  <Form.Group as={Row}>
+                    <Form.Label column xs={3} className="p-1">Color</Form.Label>
+                    <Col xs={9} className="p-1">
+                      <Form.Control
+                        type="color"
+                        value={brushColor}
+                        onChange={handleBrushColorChange}
                       />
                     </Col>
                   </Form.Group>
