@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
@@ -19,19 +19,19 @@ export default function BrushOptions(props: Props) {
   const { onChange, value } = props;
   const { size, color } = value;
 
-  const handleBrushSizeChange = useCallback((event: React.FormEvent<HTMLInputElement>) => {
+  const handleBrushSizeChange = (event: React.FormEvent<HTMLInputElement>) => {
     onChange({
       ...value,
       size: event.currentTarget.valueAsNumber,
     });
-  }, [onChange, value]);
+  };
 
-  const handleBrushColorChange = useCallback((event: React.FormEvent<HTMLInputElement>) => {
+  const handleBrushColorChange = (event: React.FormEvent<HTMLInputElement>) => {
     onChange({
       ...value,
       color: event.currentTarget.value,
     });
-  }, [onChange, value]);
+  };
 
   return (
     <Card>

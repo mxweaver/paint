@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
@@ -19,19 +19,19 @@ export default function CanvasOptions(props: Props) {
   const { onChange, value } = props;
   const { width, height } = value;
 
-  const handleWidthChange = useCallback((event: React.FormEvent<HTMLInputElement>) => {
+  const handleWidthChange = (event: React.FormEvent<HTMLInputElement>) => {
     onChange({
       ...value,
       width: event.currentTarget.valueAsNumber,
     });
-  }, [onChange, value]);
+  };
 
-  const handleHeightChange = useCallback((event: React.FormEvent<HTMLInputElement>) => {
+  const handleHeightChange = (event: React.FormEvent<HTMLInputElement>) => {
     onChange({
       ...value,
       height: event.currentTarget.valueAsNumber,
     });
-  }, [onChange, value]);
+  };
 
   return (
     <Card className="mt-2">

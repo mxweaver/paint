@@ -1,5 +1,7 @@
 import React, {
-  useRef, useCallback, useState, useEffect,
+  useRef,
+  useState,
+  useEffect,
 } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -43,22 +45,22 @@ export default function App() {
   const viewCanvasRef = useRef<HTMLCanvasElement>();
 
   const [drawing, setDrawing] = useState(false);
-  const [cursorPosition, setCursorPosition] = useState(null);
-  const [initialCursorPosition, setInitialCursorPosition] = useState(null);
+  const [cursorPosition, setCursorPosition] = useState<number[] | null>(null);
+  const [initialCursorPosition, setInitialCursorPosition] = useState<number[] | null>(null);
   const [tool, setTool] = useState(Tool.Brush);
   const [shift, setShift] = useState(false);
 
-  const handleSave = useCallback(() => {
+  const handleSave = () => {
     window.location.href = viewCanvasRef
       .current
       .toDataURL('image/png')
       .replace('image/png', 'image/octet-stream');
-  }, [viewCanvasRef]);
+  };
 
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+  const handleKeyDown = (event: KeyboardEvent) => {
     setShift(event.shiftKey);
 
-    let delta = null;
+    let delta: number[] | null = null;
 
     switch (event.key) {
       case Key.Space:
@@ -92,21 +94,25 @@ export default function App() {
         break;
     }
 
-    if (delta !== null && cursorPosition) {
-      setCursorPosition([cursorPosition[0] + delta[0], cursorPosition[1] + delta[1]]);
+    if (delta !== null) {
+      setCursorPosition((cursorPosition) => {
+        if (cursorPosition !== null) {
+          return [
+            cursorPosition[0] + delta[0],
+            cursorPosition[1] + delta[1],
+          ];
+        }
+        return null;
+      });
     }
-  }, [
-    setShift,
-    cursorPosition,
-    setDrawing,
-  ]);
+  };
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
+  }, []);
 
-  const handleKeyUp = useCallback((event: KeyboardEvent) => {
+  const handleKeyUp = (event: KeyboardEvent) => {
     setShift(event.shiftKey);
 
     switch (event.key) {
@@ -118,17 +124,14 @@ export default function App() {
         // do nothing
         break;
     }
-  }, [
-    setShift,
-    setDrawing,
-  ]);
+  };
 
   useEffect(() => {
     document.addEventListener('keyup', handleKeyUp);
     return () => document.removeEventListener('keyup', handleKeyUp);
-  }, [handleKeyUp]);
+  }, []);
 
-  const handleMouseDown = useCallback((event: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
     setDrawing(event.buttons === PRIMARY_MOUSE_BUTTON);
 
     const rect = event.currentTarget.getBoundingClientRect();
@@ -136,26 +139,26 @@ export default function App() {
       event.clientX - rect.left,
       event.clientY - rect.top,
     ]);
-  }, []);
+  };
 
-  const handleMouseMove = useCallback((event: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
 
     setCursorPosition([
       Math.floor(event.clientX - rect.left),
       Math.floor(event.clientY - rect.top),
     ]);
-  }, []);
+  };
 
-  const handleMouseUp = useCallback(() => {
+  const handleMouseUp = () => {
     setDrawing(false);
     setInitialCursorPosition(null);
-  }, []);
+  };
 
-  const handleMouseLeave = useCallback(() => {
+  const handleMouseLeave = () => {
     setCursorPosition(null);
     setInitialCursorPosition(null);
-  }, []);
+  };
 
   function getCursorPosition(): number[] | null {
     if (cursorPosition === null) {
@@ -241,11 +244,11 @@ export default function App() {
     viewCanvasRef.current.getContext('2d').fillStyle = brushOptions.color;
   }, [brushOptions.color]);
 
-  const handleReset = useCallback(() => {
+  const handleReset = () => {
     const viewCanvas = viewCanvasRef.current;
     const context = viewCanvas.getContext('2d');
     context.clearRect(0, 0, viewCanvas.width, viewCanvas.height);
-  }, [viewCanvasRef]);
+  };
 
   return (
     <Container>
