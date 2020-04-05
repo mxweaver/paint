@@ -15,6 +15,7 @@ import BrushOptionsPanel from './BrushOptionsPanel';
 import CanvasOptionsPanel from './CanvasOptionsPanel';
 import CursorOptions from './CursorOptions';
 import CursorCanvas from './CursorCanvas';
+import RulerLayer from './RulerLayer';
 import { getLockedCursorPosition, resizeCanvas } from '../utils';
 import c from './App.module.scss';
 
@@ -237,6 +238,10 @@ export default function App() {
                 canvasOptions={canvasOptions}
                 cursorPosition={cursorPosition}
                 brushOptions={brushOptions}
+              />
+              <RulerLayer
+                canvasOptions={canvasOptions}
+                cursorPosition={cursorPosition}
               />
               <canvas
                 ref={viewCanvasRef}
