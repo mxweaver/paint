@@ -15,7 +15,7 @@ import BrushOptionsPanel from './BrushOptionsPanel';
 import CanvasOptionsPanel from './CanvasOptionsPanel';
 import CursorOptions from './CursorOptions';
 import CursorCanvas from './CursorCanvas';
-import { getLockedCursorPosition } from '../utils';
+import { getLockedCursorPosition, resizeCanvas } from '../utils';
 import c from './App.module.scss';
 
 const PRIMARY_MOUSE_BUTTON = 1;
@@ -192,6 +192,11 @@ export default function App() {
     viewCanvasRef.current.getContext('2d').fillStyle = brushOptions.color;
   }, [brushOptions.color]);
 
+  // sync canvas dimensions
+  useEffect(() => {
+    resizeCanvas(viewCanvasRef.current, canvasOptions.width, canvasOptions.height);
+  }, [canvasOptions.width, canvasOptions.height]);
+
   const handleReset = () => {
     const viewCanvas = viewCanvasRef.current;
     const context = viewCanvas.getContext('2d');
@@ -235,8 +240,6 @@ export default function App() {
               />
               <canvas
                 ref={viewCanvasRef}
-                width={canvasOptions.width}
-                height={canvasOptions.height}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseLeave}

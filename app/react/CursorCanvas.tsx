@@ -1,5 +1,10 @@
 import React, { useRef, useEffect } from 'react';
-import { Position, BrushOptions, CanvasOptions } from '../utils';
+import {
+  Position,
+  BrushOptions,
+  CanvasOptions,
+  resizeCanvas,
+} from '../utils';
 import c from './CursorCanvas.module.scss';
 
 interface Props {
@@ -38,12 +43,15 @@ export default function CursorCanvas(props: Props) {
     brushOptions.size,
   ]);
 
+  // sync canvas dimensions
+  useEffect(() => {
+    resizeCanvas(cursorCanvasRef.current, canvasOptions.width, canvasOptions.height);
+  }, [canvasOptions.width, canvasOptions.height]);
+
   return (
     <canvas
       ref={cursorCanvasRef}
       className={c.cursorCanvas}
-      width={canvasOptions.width}
-      height={canvasOptions.height}
     />
   );
 }
