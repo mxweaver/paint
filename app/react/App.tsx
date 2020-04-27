@@ -3,9 +3,6 @@ import React, {
   useState,
   useEffect,
 } from 'react';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
@@ -205,60 +202,52 @@ export default function App() {
   };
 
   return (
-    <Container>
-      <Row>
-        <Col>
-          <ButtonToolbar>
-            <ButtonGroup className="mr-2">
-              <Button
-                active={tool === Tool.Brush}
-                onClick={() => setTool(Tool.Brush)}
-              >
-                <FontAwesomeIcon icon={faPaintBrush} />
-              </Button>
-              <Button
-                onClick={handleReset}
-              >
-                <FontAwesomeIcon icon={faTrash} />
-              </Button>
-              <Button
-                onClick={handleSave}
-              >
-                <FontAwesomeIcon icon={faSave} />
-              </Button>
-            </ButtonGroup>
-          </ButtonToolbar>
-        </Col>
-      </Row>
-      <Row className="mt-2">
-        <Col>
-          <div className={c.container}>
-            <div className={c.inner}>
-              <CursorCanvas
-                canvasOptions={canvasOptions}
-                cursorPosition={cursorPosition}
-                brushOptions={brushOptions}
-              />
-              <RulerLayer
-                canvasOptions={canvasOptions}
-                cursorPosition={cursorPosition}
-              />
-              <canvas
-                ref={viewCanvasRef}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseLeave}
-                onMouseDown={handleMouseDown}
-              />
-            </div>
-          </div>
-        </Col>
-        <Col xs={3}>
-          <BrushOptionsPanel value={brushOptions} onChange={setBrushOptions} />
-          <CursorOptions position={cursorPosition} />
-          <CanvasOptionsPanel value={canvasOptions} onChange={setCanvasOptions} />
-        </Col>
-      </Row>
-    </Container>
+    <>
+      <ButtonToolbar>
+        <ButtonGroup className="mr-2">
+          <Button
+            active={tool === Tool.Brush}
+            onClick={() => setTool(Tool.Brush)}
+          >
+            <FontAwesomeIcon icon={faPaintBrush} />
+          </Button>
+          <Button
+            onClick={handleReset}
+          >
+            <FontAwesomeIcon icon={faTrash} />
+          </Button>
+          <Button
+            onClick={handleSave}
+          >
+            <FontAwesomeIcon icon={faSave} />
+          </Button>
+        </ButtonGroup>
+      </ButtonToolbar>
+      <div className={c.container}>
+        <div className={c.inner}>
+          <CursorCanvas
+            canvasOptions={canvasOptions}
+            cursorPosition={cursorPosition}
+            brushOptions={brushOptions}
+          />
+          <RulerLayer
+            canvasOptions={canvasOptions}
+            cursorPosition={cursorPosition}
+          />
+          <canvas
+            ref={viewCanvasRef}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
+            onMouseDown={handleMouseDown}
+          />
+        </div>
+      </div>
+      <div>
+        <BrushOptionsPanel value={brushOptions} onChange={setBrushOptions} />
+        <CursorOptions position={cursorPosition} />
+        <CanvasOptionsPanel value={canvasOptions} onChange={setCanvasOptions} />
+      </div>
+    </>
   );
 }
